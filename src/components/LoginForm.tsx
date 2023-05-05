@@ -1,5 +1,7 @@
+import { TextField, DialogContent } from '@mui/material';
 import { SyntheticEvent, useState } from 'react';
 import { UserObj } from 'types';
+import Button from '@mui/material/Button';
 
 type LogingFormProps = {
 	onSubmit: (data: UserObj) => void;
@@ -19,26 +21,27 @@ export const LoginForm = ({ onSubmit, buttonText }: LogingFormProps) => {
 
 	return (
 		<form onSubmit={handleSubmit}>
-			<div>
-				<label htmlFor="username">Username</label>
-				<input
+			<DialogContent>
+				<TextField
+					label="User name"
+					autoFocus
 					id="username"
 					value={userName}
 					onChange={e => setUserName(e.target.value)}
 				/>
-			</div>
-			<div>
-				<label htmlFor="password">Password</label>
-				<input
-					id="password"
-					type="password"
-					value={password}
-					onChange={e => setPassword(e.target.value)}
-				/>
-			</div>
-			<div>
-				<button type="submit">{buttonText}</button>
-			</div>
+				<div>
+					<TextField
+						label="Password"
+						id="password"
+						type="password"
+						value={password}
+						onChange={e => setPassword(e.target.value)}
+					/>
+				</div>
+			</DialogContent>
+			<Button variant="outlined" type="submit">
+				{buttonText}
+			</Button>
 		</form>
 	);
 };
