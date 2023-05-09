@@ -6,6 +6,7 @@ import Dialog from '@mui/material/Dialog';
 import { LoginForm } from './components/LoginForm';
 import { DialogActions, DialogTitle } from '@mui/material';
 import Button from '@mui/material/Button';
+import { XMarkIcon } from '@heroicons/react/20/solid';
 
 function App() {
 	const [openModal, setOpenModal] = React.useState('none');
@@ -21,18 +22,31 @@ function App() {
 	function register(formData: UserObj) {
 		console.log('register', formData);
 	}
+	const buttonStyle = {
+		margin: '10px',
+		'&:hover': {
+			backgroundColor: 'blue',
+			color: 'white',
+		},
+	};
 
 	return (
-		<div>
+		<div className="w-full h-screen flex flex-col items-center justify-center">
 			<Logo width="80" height="80" />
-			<h1>Bookshelf</h1>
-			<div>
-				<Button variant="outlined" onClick={() => setOpenModal('login')}>
+			<h1 className="text-xl font-medium m-5">Bookshelf</h1>
+			<div className="flex flex-col ">
+				<Button
+					sx={buttonStyle}
+					variant="outlined"
+					onClick={() => setOpenModal('login')}
+				>
 					Login
 				</Button>
-			</div>
-			<div>
-				<Button variant="outlined" onClick={() => setOpenModal('register')}>
+				<Button
+					sx={buttonStyle}
+					variant="outlined"
+					onClick={() => setOpenModal('register')}
+				>
 					Register
 				</Button>
 			</div>
@@ -43,7 +57,7 @@ function App() {
 			>
 				<DialogActions>
 					<Button variant="outlined" onClick={handleClose}>
-						Close
+						<XMarkIcon />
 					</Button>
 				</DialogActions>
 				<DialogTitle>Login</DialogTitle>
@@ -56,7 +70,7 @@ function App() {
 			>
 				<DialogActions>
 					<Button variant="outlined" onClick={handleClose}>
-						Close
+						<XMarkIcon />
 					</Button>
 				</DialogActions>
 				<DialogTitle>Register</DialogTitle>

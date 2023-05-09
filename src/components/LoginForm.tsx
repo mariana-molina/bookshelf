@@ -1,7 +1,9 @@
-import { TextField, DialogContent } from '@mui/material';
+import { TextField, DialogContent, DialogActions } from '@mui/material';
 import { SyntheticEvent, useState } from 'react';
 import { UserObj } from 'types';
 import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
 
 type LogingFormProps = {
 	onSubmit: (data: UserObj) => void;
@@ -19,29 +21,44 @@ export const LoginForm = ({ onSubmit, buttonText }: LogingFormProps) => {
 		});
 	}
 
+	const CircularIndeterminate = () => {
+		return (
+			<Box sx={{ display: 'flex' }}>
+				<CircularProgress />
+			</Box>
+		);
+	};
+
 	return (
 		<form onSubmit={handleSubmit}>
-			<DialogContent>
+			<DialogContent sx={{ display: 'flex', flexDirection: 'column' }}>
 				<TextField
 					label="User name"
 					autoFocus
 					id="username"
 					value={userName}
 					onChange={e => setUserName(e.target.value)}
+					sx={{
+						margin: '10px',
+					}}
 				/>
-				<div>
-					<TextField
-						label="Password"
-						id="password"
-						type="password"
-						value={password}
-						onChange={e => setPassword(e.target.value)}
-					/>
-				</div>
+				<TextField
+					label="Password"
+					id="password"
+					type="password"
+					value={password}
+					onChange={e => setPassword(e.target.value)}
+					sx={{
+						margin: '10px',
+					}}
+				/>
 			</DialogContent>
-			<Button variant="outlined" type="submit">
-				{buttonText}
-			</Button>
+			<DialogActions>
+				<Button variant="outlined" type="submit">
+					{buttonText}
+				</Button>
+				<CircularIndeterminate />
+			</DialogActions>
 		</form>
 	);
 };
