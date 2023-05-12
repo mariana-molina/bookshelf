@@ -7,6 +7,7 @@ import { LoginForm } from './components/LoginForm';
 import { DialogActions, DialogTitle } from '@mui/material';
 import Button from '@mui/material/Button';
 import { XMarkIcon } from '@heroicons/react/20/solid';
+import { DiscoverBooksScreen } from 'discover';
 
 function App() {
 	const [openModal, setOpenModal] = React.useState('none');
@@ -76,6 +77,7 @@ function App() {
 				<DialogTitle>Register</DialogTitle>
 				<LoginForm onSubmit={register} buttonText="Register" />
 			</Dialog>
+			<DiscoverBooksScreen />
 		</div>
 	);
 }
