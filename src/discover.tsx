@@ -48,25 +48,14 @@ const DiscoverBooksScreen = () => {
 	};
 
 	return (
-		<div
-		// className={{ maxWidth: 800, margin: 'auto', width: '90vw', padding: '40px 0' }}
-		>
+		<div className={'max-w-screen-md m-auto w-90vw py-40 px-0'}>
 			<form onSubmit={handleSearchSubmit}>
-				<input
-					placeholder="Search books..."
-					id="search"
-					// css={{ width: '100%' }}
-				/>
+				<input placeholder="Search books..." id="search" className={'w-full'} />
 				<div>
 					<label htmlFor="search">
 						<button
 							type="submit"
-							// css={{
-							// 	border: '0',
-							// 	position: 'relative',
-							// 	marginLeft: '-35px',
-							// 	background: 'transparent',
-							// }}
+							className={'border-0 relative mr-35	bg-transparent'}
 						>
 							{isLoading ? (
 								<CircularIndeterminate />
