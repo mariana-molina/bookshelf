@@ -8,8 +8,15 @@ import { DialogActions, DialogTitle } from '@mui/material';
 import Button from '@mui/material/Button';
 import { XMarkIcon } from '@heroicons/react/20/solid';
 import { DiscoverBooksScreen } from 'discover';
+import { auth, provider } from './config';
+import {
+	createUserWithEmailAndPassword,
+	signInWithEmailAndPassword,
+	signInWithPopup,
+} from 'firebase/auth';
 
 function App() {
+	const [user, setUser] = React.useState('');
 	const [openModal, setOpenModal] = React.useState('none');
 
 	const handleClose = () => {
@@ -21,7 +28,12 @@ function App() {
 	}
 
 	function register(formData: UserObj) {
-		console.log('register', formData);
+		const { email, password } = formData;
+		createUserWithEmailAndPassword(auth, email, password).then((data: any) => {
+			console.log('USER:', data.user);
+			localStorage.setItem('email', data.user.email);
+			setUser(data.user.email);
+		});
 	}
 	const buttonStyle = {
 		margin: '10px',
@@ -77,7 +89,6 @@ function App() {
 				<DialogTitle>Register</DialogTitle>
 				<LoginForm onSubmit={register} buttonText="Register" />
 			</Dialog>
-			<DiscoverBooksScreen />
 		</div>
 	);
 }

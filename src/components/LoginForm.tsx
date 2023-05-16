@@ -11,12 +11,12 @@ type LogingFormProps = {
 };
 
 export const LoginForm = ({ onSubmit, buttonText }: LogingFormProps) => {
-	const [userName, setUserName] = useState('');
+	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	function handleSubmit(event: SyntheticEvent) {
 		event.preventDefault();
 		onSubmit({
-			userName,
+			email,
 			password,
 		});
 	}
@@ -36,8 +36,8 @@ export const LoginForm = ({ onSubmit, buttonText }: LogingFormProps) => {
 					label="User name"
 					autoFocus
 					id="username"
-					value={userName}
-					onChange={e => setUserName(e.target.value)}
+					value={email}
+					onChange={e => setEmail(e.target.value)}
 					sx={{
 						margin: '10px',
 					}}

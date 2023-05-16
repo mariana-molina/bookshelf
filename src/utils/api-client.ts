@@ -16,7 +16,7 @@ const client = async (endpoint: string, customConfig = {}) => {
 				return items;
 			} else {
 				const error = {
-					message: items.errors.map((e: any) => e.message).join('\n'),
+					message: 'Sorry, there was an error, try again',
 				};
 				return Promise.reject(error);
 			}

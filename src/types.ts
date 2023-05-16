@@ -1,5 +1,5 @@
 export type UserObj = {
-	userName: string;
+	email: string;
 	password: string;
 };
 

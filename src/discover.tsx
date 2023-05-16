@@ -2,36 +2,26 @@ import * as React from 'react';
 import { BookRow } from './components/BookRow';
 import { client } from './utils/api-client';
 import CircularProgress from '@mui/material/CircularProgress';
+import CloseIcon from '@mui/icons-material/Close';
+import SearchIcon from '@mui/icons-material/Search';
 import Box from '@mui/material/Box';
-import { Book } from 'types';
+import { useAsync } from './utils/hooks';
 
 const DiscoverBooksScreen = () => {
-	const [status, setStatus] = React.useState('idle');
-	const [data, setData] = React.useState([]);
+	const { data, error, run, isLoading, isError, isSuccess, reset } =
+		useAsync('');
 	const [query, setQuery] = React.useState('');
 	const [queried, setQueried] = React.useState(false);
 
-	const isLoading = status === 'loading';
-	const isSuccess = status === 'success';
-
 	React.useEffect(() => {
 		const getBook = async () => {
-			try {
-				if (!queried) {
-					return;
-				}
-				setStatus('loading');
-				const result = await client(query);
-				if (result) {
-					setData(result);
-					setStatus('success');
-				}
-			} catch (e) {
-				setStatus('rejected');
+			if (!queried) {
+				return;
 			}
+			run(client(query));
 		};
 		getBook();
-	}, [query, queried]);
+	}, [query, queried, run]);
 
 	const handleSearchSubmit = (event: any) => {
 		event.preventDefault();
@@ -47,28 +37,43 @@ const DiscoverBooksScreen = () => {
 		);
 	};
 
+	const backToSearch = () => {
+		console.log('is it doing something?');
+		reset();
+		setQueried(false);
+		setQuery('');
+	};
+
 	return (
 		<div className={'max-w-screen-md m-auto w-90vw py-40 px-0'}>
-			<form onSubmit={handleSearchSubmit}>
+			<form className="flex row" onSubmit={handleSearchSubmit}>
 				<input placeholder="Search books..." id="search" className={'w-full'} />
 				<div>
 					<label htmlFor="search">
-						<button
-							type="submit"
-							className={'border-0 relative mr-35	bg-transparent'}
-						>
+						<button type="submit" className={'border-0 bg-transparent'}>
 							{isLoading ? (
 								<CircularIndeterminate />
+							) : isError ? (
+								<CloseIcon
+									aria-label="error"
+									onClick={backToSearch}
+								></CloseIcon>
 							) : (
-								<input aria-label="search" />
+								<SearchIcon aria-label="search" />
 							)}
 						</button>
 					</label>
 				</div>
 			</form>
 
+			{isError && (
+				<div>
+					<pre>{error.message}</pre>
+				</div>
+			)}
+
 			{isSuccess ? (
-				data.length > 1 ? (
+				data ? (
 					<ul>
 						{data?.map((book: any) => (
 							<li key={book.id} aria-label={book.volumeInfo.title}>
