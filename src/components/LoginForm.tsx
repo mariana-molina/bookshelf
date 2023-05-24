@@ -2,18 +2,18 @@ import { TextField, DialogContent, DialogActions } from '@mui/material';
 import { SyntheticEvent, useState } from 'react';
 import { UserObj } from 'types';
 import Button from '@mui/material/Button';
-import CircularProgress from '@mui/material/CircularProgress';
-import Box from '@mui/material/Box';
 
 type LogingFormProps = {
 	onSubmit: (data: UserObj) => void;
 	buttonText: string;
 	authError: any;
+	setAuthError: any;
 };
 
 export const LoginForm = ({
 	onSubmit,
 	buttonText,
+	setAuthError,
 	authError,
 }: LogingFormProps) => {
 	const [email, setEmail] = useState('');
@@ -31,24 +31,19 @@ export const LoginForm = ({
 		});
 	};
 
-	// const CircularIndeterminate = () => {
-	// 	return (
-	// 		<Box sx={{ display: 'flex' }}>
-	// 			<CircularProgress />
-	// 		</Box>
-	// 	);
-	// };
-
 	return (
 		<form onSubmit={handleSubmit}>
 			<DialogContent sx={{ display: 'flex', flexDirection: 'column' }}>
 				<TextField
-					label="email"
+					label="Email"
 					autoFocus
 					id="email"
 					type="email"
 					value={email}
-					onFocus={() => setError('')}
+					onFocus={() => {
+						setError('');
+						setAuthError('');
+					}}
 					onChange={e => setEmail(e.target.value)}
 					sx={{
 						margin: '10px',
@@ -60,18 +55,20 @@ export const LoginForm = ({
 					type="password"
 					value={password}
 					onChange={e => setPassword(e.target.value)}
-					onFocus={() => setError('')}
+					onFocus={() => {
+						setError('');
+						setAuthError('');
+					}}
 					sx={{
 						margin: '10px',
 					}}
 				/>
 			</DialogContent>
-			<p className="mx-5 text-red-600">{error || authError}</p>
+			<p className="mx-8 text-red-600">{error || authError}</p>
 			<DialogActions>
 				<Button variant="outlined" type="submit">
 					{buttonText}
 				</Button>
-				{/* <CircularIndeterminate /> */}
 			</DialogActions>
 		</form>
 	);

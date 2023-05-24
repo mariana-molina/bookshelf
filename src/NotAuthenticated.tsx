@@ -12,12 +12,14 @@ type NotAuthenticatedProps = {
 	login: (formData: UserObj) => void;
 	register: (formData: UserObj) => void;
 	error: any;
+	setError: any;
 };
 
 export const NotAuthenticated = ({
 	login,
 	register,
 	error,
+	setError,
 }: NotAuthenticatedProps) => {
 	const [openModal, setOpenModal] = useState('none');
 
@@ -64,7 +66,12 @@ export const NotAuthenticated = ({
 					</Button>
 				</DialogActions>
 				<DialogTitle>Login</DialogTitle>
-				<LoginForm onSubmit={login} buttonText="Login" authError={error} />
+				<LoginForm
+					onSubmit={login}
+					buttonText="Login"
+					setAuthError={setError}
+					authError={error}
+				/>
 			</Dialog>
 			<Dialog
 				aria-label="Registration form"
@@ -80,6 +87,7 @@ export const NotAuthenticated = ({
 				<LoginForm
 					onSubmit={register}
 					buttonText="Register"
+					setAuthError={setError}
 					authError={error}
 				/>
 			</Dialog>

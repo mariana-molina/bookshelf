@@ -1,15 +1,15 @@
 import * as React from 'react';
-import { BookRow } from './components/BookRow';
-import { client } from './utils/api-client';
+import { BookRow } from '../components/BookRow';
+import { client } from '../utils/api-client';
 import CircularProgress from '@mui/material/CircularProgress';
 import CloseIcon from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';
 import Box from '@mui/material/Box';
-import { useAsync } from './utils/hooks';
+import { useAsync } from '../utils/hooks';
+import { TextField } from '@mui/material';
 
-const DiscoverBooksScreen = () => {
-	const { data, error, run, isLoading, isError, isSuccess, reset } =
-		useAsync('');
+const DiscoverBooksScreen = ({ user }: any) => {
+	const { data, error, run, isLoading, isError, isSuccess } = useAsync('');
 	const [query, setQuery] = React.useState('');
 	const [queried, setQueried] = React.useState(false);
 
@@ -18,10 +18,10 @@ const DiscoverBooksScreen = () => {
 			if (!queried) {
 				return;
 			}
-			run(client(query));
+			run(client(query, { token: user.accessToken }));
 		};
 		getBook();
-	}, [query, queried, run]);
+	}, [query, queried, run, user.accessToken]);
 
 	const handleSearchSubmit = (event: any) => {
 		event.preventDefault();
@@ -31,23 +31,26 @@ const DiscoverBooksScreen = () => {
 
 	const CircularIndeterminate = () => {
 		return (
-			<Box sx={{ display: 'flex' }}>
+			<Box
+				sx={{ display: 'flex', width: '40px', height: '40px', margin: '8px' }}
+			>
 				<CircularProgress />
 			</Box>
 		);
 	};
 
-	const backToSearch = () => {
-		console.log('is it doing something?');
-		reset();
-		setQueried(false);
-		setQuery('');
-	};
-
 	return (
-		<div className={'max-w-screen-md m-auto w-90vw py-40 px-0'}>
-			<form className="flex row" onSubmit={handleSearchSubmit}>
-				<input placeholder="Search books..." id="search" className={'w-full'} />
+		<div className={'max-w-screen-md m-auto w-90vw py-20 px-5'}>
+			<form className="flex row  items-center" onSubmit={handleSearchSubmit}>
+				<TextField
+					placeholder="Search books..."
+					id="search"
+					sx={{ width: '100%' }}
+					onFocus={() => {
+						setQuery('');
+						setQueried(false);
+					}}
+				/>
 				<div>
 					<label htmlFor="search">
 						<button type="submit" className={'border-0 bg-transparent'}>
@@ -56,10 +59,21 @@ const DiscoverBooksScreen = () => {
 							) : isError ? (
 								<CloseIcon
 									aria-label="error"
-									onClick={backToSearch}
+									sx={{
+										width: '40px',
+										height: '40px',
+										margin: '8px',
+									}}
 								></CloseIcon>
 							) : (
-								<SearchIcon aria-label="search" />
+								<SearchIcon
+									sx={{
+										width: '40px',
+										height: '40px',
+										margin: '8px',
+									}}
+									aria-label="search"
+								/>
 							)}
 						</button>
 					</label>
@@ -68,7 +82,7 @@ const DiscoverBooksScreen = () => {
 
 			{isError && (
 				<div>
-					<pre>{error.message}</pre>
+					<pre className={'mt-20px'}>{error.message}</pre>
 				</div>
 			)}
 

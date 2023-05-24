@@ -8,11 +8,15 @@ import {
 } from 'firebase/auth';
 import { NotAuthenticated } from 'NotAuthenticated';
 import { Authenticated } from 'Authenticated';
-import { CropLandscapeOutlined } from '@mui/icons-material';
+import { BrowserRouter } from 'react-router-dom';
+import { useAsync } from 'utils/hooks';
+import { FullPageSpinner } from 'components/lib';
 
-function App() {
-	const [user, setUser] = React.useState('');
+const App = () => {
+	const [user, setUser] = React.useState(null);
 	const [error, setError] = React.useState('');
+
+	const { data: isLoading, isIdle, isError, isSuccess } = useAsync('');
 
 	const login = (formData: UserObj) => {
 		const { email, password } = formData;
@@ -46,18 +50,39 @@ function App() {
 
 	const logout = () => {
 		localStorage.removeItem('email');
+		setUser(null);
 		//FALTA REDIRIGIR AL INICIO
 	};
 
-	return (
-		<div>
-			{user ? (
-				<Authenticated user={user} logout={logout} />
-			) : (
-				<NotAuthenticated login={login} register={register} error={error} />
-			)}
-		</div>
+	// if (isLoading || isIdle) {
+	// 	console.log('loading');
+	// 	return <FullPageSpinner />;
+	// }
+
+	if (isError) {
+		console.log('error');
+		return (
+			<div>
+				<p>Uh oh... There's a problem. Try refreshing the app.</p>
+				<pre>{error}</pre>
+			</div>
+		);
+	}
+	// if (isSuccess) {
+	return user ? (
+		<BrowserRouter>
+			<Authenticated user={user} logout={logout} />
+		</BrowserRouter>
+	) : (
+		<NotAuthenticated
+			login={login}
+			register={register}
+			setError={setError}
+			error={error}
+		/>
 	);
-}
+	// }
+	// return null;
+};
 
 export default App;
