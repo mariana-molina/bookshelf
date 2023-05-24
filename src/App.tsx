@@ -10,7 +10,6 @@ import { NotAuthenticated } from 'NotAuthenticated';
 import { Authenticated } from 'Authenticated';
 import { BrowserRouter } from 'react-router-dom';
 import { useAsync } from 'utils/hooks';
-import { FullPageSpinner } from 'components/lib';
 
 const App = () => {
 	const [user, setUser] = React.useState(null);
