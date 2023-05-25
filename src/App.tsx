@@ -12,7 +12,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { useAsync } from 'utils/hooks';
 
 const App = () => {
-	const [user, setUser] = React.useState(null);
+	const [user, setUser] = React.useState('');
 	const [error, setError] = React.useState('');
 
 	const { data: isLoading, isIdle, isError, isSuccess } = useAsync('');
@@ -20,15 +20,31 @@ const App = () => {
 	const login = (formData: UserObj) => {
 		const { email, password } = formData;
 		signInWithEmailAndPassword(auth, email, password)
-			.then((data: any) => {
-				console.log('USER LOGIN SUCCESSFULLY:', data.user);
-				localStorage.setItem('email', data.user.email);
-				setUser(data.user.email);
+			.then(userCredential => {
+				// Signed in
+				const user = userCredential.user.email;
+				user && setUser(user);
+				// ...
 			})
 			.catch(error => {
-				setError(error.code);
-				console.log('error while signing in');
+				const errorCode = error.code;
+				const errorMessage = error.message;
+				console.log(errorCode);
+				console.log(errorMessage);
 			});
+
+		// signInWithEmailAndPassword(auth, email, password)
+		// 	.then((data: any) => {
+		// 		console.log('USER LOGIN SUCCESSFULLY:', data.user);
+		// 		localStorage.setItem('email', data.user.email);
+		// 		setUser(data.user.email);
+		// 		//SEND TO DISCOVER ROUTE
+		// 	})
+		// 	.catch(error => {
+		// 		setError(error.code);
+		// 		console.log(error);
+		// 		console.log('error while signing in');
+		// 	});
 	};
 
 	const register = (formData: UserObj) => {
@@ -39,6 +55,7 @@ const App = () => {
 				localStorage.setItem('email', data.user.email);
 				setUser(data.user.email);
 				console.log('user registered succesfully');
+				//SEND TO DISCOVER ROUTE
 			})
 			.catch(error => {
 				setError(error.code);
@@ -49,25 +66,10 @@ const App = () => {
 
 	const logout = () => {
 		localStorage.removeItem('email');
-		setUser(null);
+		setUser('');
 		//FALTA REDIRIGIR AL INICIO
 	};
-
-	// if (isLoading || isIdle) {
-	// 	console.log('loading');
-	// 	return <FullPageSpinner />;
-	// }
-
-	if (isError) {
-		console.log('error');
-		return (
-			<div>
-				<p>Uh oh... There's a problem. Try refreshing the app.</p>
-				<pre>{error}</pre>
-			</div>
-		);
-	}
-	// if (isSuccess) {
+	console.log('HERE IS USER', user);
 	return user ? (
 		<BrowserRouter>
 			<Authenticated user={user} logout={logout} />
@@ -80,8 +82,6 @@ const App = () => {
 			error={error}
 		/>
 	);
-	// }
-	// return null;
 };
 
 export default App;

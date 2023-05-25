@@ -1,44 +1,67 @@
-import { Link } from 'react-router-dom';
 import { Book } from 'types';
+
+import AddIcon from '@mui/icons-material/Add';
+import he from 'he';
+import { AddButtonStyled } from 'styles';
 
 const BookRow = ({ book }: any) => {
 	const { title, authors, imageLinks, publishedDate } = book.volumeInfo;
 
 	const id = `book-row-book-${book.id}`;
 
+	const addToWishlist = () => {};
+
 	return (
-		<div className={'flex align-center my-4 border-2'}>
-			<Link to={`/book/${book.id}`}>
-				{/* {image} */}
-				<div>
-					<img src={imageLinks.thumbnail} alt={`${title} book cover`} />
-				</div>
-				{/* {All text} */}
-				<div className={'flex-1 mx-7 my-5'}>
-					{/* {title, author, date} */}
-					<div className={'flex justify-between mb-4 items-center'}>
-						<div className={'flex'}>
-							<h2 id={id} className={'text-xl'}>
-								{title}
-							</h2>
-						</div>
-						<div className={'ml-10'}>
-							<div className={'mt-1.5 italic text-sm'}>
-								{authors.map((author: string) => author)}
+		<div className={' my-4 border-2'}>
+			<div>
+				<div className={'flex row align-center'}>
+					{/* {image} */}
+					<div>
+						<img src={imageLinks.thumbnail} alt={`${title} book cover`} />
+					</div>
+					{/* {All text} */}
+					<div className={'flex-1 mx-7 my-5'}>
+						{/* {title, author, date} */}
+						<div className={'flex justify-between mb-4 items-center'}>
+							<div className={'flex'}>
+								<h2 id={id} className={'text-xl'}>
+									{title}
+								</h2>
 							</div>
-							<small>{publishedDate}</small>
+							<div className={'ml-10'}>
+								<div className={'mt-1.5 italic text-sm'}>
+									{authors.map((author: string) => author)}
+								</div>
+								<small>{publishedDate}</small>
+							</div>
+						</div>
+						{/* {description} */}
+						<small className={'whitespace-break-spaces block'}>
+							{book.searchInfo ? (
+								<p>{he.decode(book.searchInfo.textSnippet)}</p>
+							) : (
+								'No description available'
+							)}
+						</small>
+						<div className="flex row mt-5 justify-end ">
+							<AddButtonStyled onClick={addToWishlist}>
+								<p className="wx-100 mr-2">Add to read list</p>
+								<AddIcon
+									sx={{
+										borderRadius: '150px',
+										'&:hover': {
+											backgroundColor: 'rgb(84, 141, 215)',
+											color: 'white',
+											transition: 'ease-in-out',
+											boxShadow: 'rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;',
+										},
+									}}
+								/>
+							</AddButtonStyled>
 						</div>
 					</div>
-					{/* {description} */}
-					<small className={'whitespace-break-spaces block'}>
-						{book.searchInfo ? (
-							<p>{book.searchInfo.textSnippet}</p>
-						) : (
-							'No description available'
-						)}
-					</small>
 				</div>
-			</Link>
+			</div>
 		</div>
 	);
 };

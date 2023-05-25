@@ -6,6 +6,7 @@ import { LoginForm } from './components/LoginForm';
 import { DialogActions, DialogTitle } from '@mui/material';
 import Button from '@mui/material/Button';
 import { XMarkIcon } from '@heroicons/react/20/solid';
+import { buttonStyle } from 'styles';
 import { UserObj } from 'types';
 
 type NotAuthenticatedProps = {
@@ -25,14 +26,6 @@ export const NotAuthenticated = ({
 
 	const handleClose = () => {
 		setOpenModal('none');
-	};
-
-	const buttonStyle = {
-		margin: '10px',
-		'&:hover': {
-			backgroundColor: 'blue',
-			color: 'white',
-		},
 	};
 
 	return (
