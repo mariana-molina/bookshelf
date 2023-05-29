@@ -3,13 +3,27 @@ import { Book } from 'types';
 import AddIcon from '@mui/icons-material/Add';
 import he from 'he';
 import { AddButtonStyled } from 'styles';
+import { addBook } from 'utils/api_books';
 
-const BookRow = ({ book }: any) => {
+const BookRow = ({ user, book }: any) => {
 	const { title, authors, imageLinks, publishedDate } = book.volumeInfo;
-
 	const id = `book-row-book-${book.id}`;
 
-	const addToWishlist = () => {};
+	const addToWishlist = async () => {
+		const bookData = {
+			email: user,
+			title: book.volumeInfo.title ? book.volumeInfo.title : 'NA',
+			authors: book.volumeInfo.authors ? book.volumeInfo.authors : 'NA',
+			imageLinks: book.volumeInfo.imageLinks.thumbnail
+				? book.volumeInfo.imageLinks.thumbnail
+				: 'NA',
+			publishedDate: book.volumeInfo.publishedDate
+				? book.volumeInfo.publishedDate
+				: 'NA',
+			textSnippet: book.searchInfo ? book.searchInfo.textSnippet : 'NA',
+		};
+		await addBook(bookData);
+	};
 
 	return (
 		<div className={' my-4 border-2'}>
@@ -30,7 +44,7 @@ const BookRow = ({ book }: any) => {
 							</div>
 							<div className={'ml-10'}>
 								<div className={'mt-1.5 italic text-sm'}>
-									{authors.map((author: string) => author)}
+									{authors && authors.map((author: string) => author)}
 								</div>
 								<small>{publishedDate}</small>
 							</div>

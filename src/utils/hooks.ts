@@ -53,6 +53,7 @@ const useAsync = (initialState: any) => {
 			return promise.then(
 				(data: any) => {
 					setData(data);
+					console.log('HERE DATA ON HOOK', data);
 					return data;
 				},
 				(error: any) => {

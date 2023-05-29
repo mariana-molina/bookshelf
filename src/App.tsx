@@ -69,7 +69,6 @@ const App = () => {
 		setUser('');
 		//FALTA REDIRIGIR AL INICIO
 	};
-	console.log('HERE IS USER', user);
 	return user ? (
 		<BrowserRouter>
 			<Authenticated user={user} logout={logout} />

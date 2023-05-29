@@ -1,70 +1,63 @@
 import * as React from 'react';
-import { client } from 'utils/api-client';
-import { useAsync } from 'utils/hooks';
 import bookPlaceholderSvg from 'assets/book-placeholder.svg';
+import { getDocByEmail } from 'utils/api_books';
+import { useState } from 'react';
+import { useAsync } from 'utils/hooks';
 
 const loadingBook = {
 	title: 'Loading...',
-	author: 'loading...',
-	coverImageUrl: bookPlaceholderSvg,
-	publisher: 'Loading Publishing',
-	synopsis: 'Loading...',
+	authors: 'loading...',
+	imageLinks: bookPlaceholderSvg,
+	publishedDate: 'Loading Publishing',
+	textSnippet: 'Loading...',
 	loadingBook: true,
 };
 
 const BookScreen = ({ user }: any) => {
-	// const { authors, imageLinks, publishedDate } = book.volumeInfo ?? loadingBook;
+	// const [data, setData] = useState<{}[]>([]);
+	const { data, run } = useAsync('');
 
-	return <div>THIS SHOULD BE A LIST OF ALL BOOKS THAT WANTS TO READ</div>;
+	React.useEffect(() => {
+		const getAllBooks = async () => {
+			// const books = await getDocByEmail(user);
+			run(getDocByEmail(user));
+			// setData(books);
+		};
+		getAllBooks();
+	}, [user, run]);
 
-	// (
-	// 	<div>
-	// 		<div
-	// 		// className={
-	// 		//   display: 'grid',
-	// 		//   gridTemplateColumns: '1fr 2fr',
-	// 		//   gridGap: '2em',
-	// 		//   marginBottom: '1em',
-	// 		//   [mq.small]: {
-	// 		//     display: 'flex',
-	// 		//     flexDirection: 'column',
-	// 		//   },
-	// 		// }
-	// 		>
-	// 			<img
-	// 				src={imageLinks}
-	// 				alt={`${title} book cover`}
-	// 				// css={{width: '100%', maxWidth: '14rem'}}
-	// 			/>
-	// 			<div>
-	// 				<div
-	// 				// css={{display: 'flex', position: 'relative'}}
-	// 				>
-	// 					<div
-	// 					//  css={{flex: 1, justifyContent: 'space-between'}}
-	// 					>
-	// 						<h1>{title}</h1>
-	// 						<div>
-	// 							<i>{authors}</i>
-	// 							<span
-	// 							// css={{marginRight: 6, marginLeft: 6}}
-	// 							>
-	// 								|
-	// 							</span>
-	// 							<i>{publishedDate}</i>
-	// 						</div>
-	// 					</div>
-	// 				</div>
-	// 				<br />
-	// 				{data.book.searchInfo ? (
-	// 					<p>{data.book.searchInfo.textSnippet}</p>
-	// 				) : (
-	// 					'No description available'
-	// 				)}
-	// 			</div>
-	// 		</div>
-	// 	</div>
-	// );
+	console.log(data);
+
+	return (
+		data &&
+		data.map((book: any) => {
+			return (
+				<div>
+					<div className="flex flex-col gap-y-2 lg:grid lg:grid-cols-2 lg:gap-14">
+						<img
+							className="w-full max-w-xs"
+							alt={book.title + 'book cover'}
+							src={book.imageLinks}
+						/>
+						<div>
+							<div className="flex relative">
+								<div className="flex-1 justify-between">
+									<h1> {book.title}</h1>
+									<div>
+										<i>{book.authors}</i>
+										<span className="mx-6">|</span>
+										<i>{book.publishedDate}</i>
+									</div>
+								</div>
+							</div>
+							<br />
+							<p>{book.textSnippet}</p>
+						</div>
+					</div>
+				</div>
+			);
+		})
+	);
 };
 
 export { BookScreen };

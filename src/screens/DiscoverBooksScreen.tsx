@@ -91,7 +91,7 @@ const DiscoverBooksScreen = ({ user }: any) => {
 					<ul>
 						{data?.map((book: any) => (
 							<li key={book.id} aria-label={book.volumeInfo.title}>
-								<BookRow key={book.id} book={book} />
+								<BookRow user={user} key={book.id} book={book} />
 							</li>
 						))}
 					</ul>
