@@ -1,5 +1,5 @@
 import { Button } from '@mui/material';
-import { Routes, Route, Link } from 'react-router-dom';
+import { Routes, Route, Link, useMatch, useLocation } from 'react-router-dom';
 import { DiscoverBooksScreen } from './screens/DiscoverBooksScreen';
 import { BookScreen } from './screens/BookScreen';
 import { NotFoundScreen } from './screens/NotFoundScreen';
@@ -41,13 +41,28 @@ export const Authenticated = ({ user, logout }: AuthenthicatedProps) => {
 	);
 };
 
-const NavLink = (props: any) => {
-	return <Link style={linkStyle} {...props} />;
+const NavLink = ({
+	to,
+	children,
+}: {
+	to: string;
+	children: React.ReactNode;
+}) => {
+	const location = useLocation();
+	const isActive = location.pathname === to;
+	const linkClassName = isActive
+		? 'border-l-5 border-l-2 border-l-indigo bg-gray10 hover:bg-gray10'
+		: '';
+	return (
+		<Link to={to} className={`${linkStyle} ${linkClassName}`}>
+			{children}
+		</Link>
+	);
 };
 
 const Nav = () => {
 	return (
-		<nav className="sticky top-4 py-4 px-6 border border-solid rounded">
+		<nav className="sticky top-4 py-4 px-6 border border-solid border-gray10 rounded">
 			<ul className="list-none p-0">
 				<li>
 					<NavLink to="/">Discover</NavLink>

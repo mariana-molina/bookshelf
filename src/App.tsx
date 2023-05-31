@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './App.css';
 import { UserObj } from 'types';
 import { auth } from './config';
@@ -23,7 +23,10 @@ const App = () => {
 			.then(userCredential => {
 				// Signed in
 				const user = userCredential.user.email;
-				user && setUser(user);
+				if (user) {
+					setUser(user);
+					localStorage.setItem('email', user);
+				}
 				// ...
 			})
 			.catch(error => {
@@ -36,7 +39,6 @@ const App = () => {
 		// signInWithEmailAndPassword(auth, email, password)
 		// 	.then((data: any) => {
 		// 		console.log('USER LOGIN SUCCESSFULLY:', data.user);
-		// 		localStorage.setItem('email', data.user.email);
 		// 		setUser(data.user.email);
 		// 		//SEND TO DISCOVER ROUTE
 		// 	})
@@ -49,19 +51,16 @@ const App = () => {
 
 	const register = (formData: UserObj) => {
 		const { email, password } = formData;
-		// try {
 		createUserWithEmailAndPassword(auth, email, password)
 			.then((data: any) => {
 				localStorage.setItem('email', data.user.email);
 				setUser(data.user.email);
 				console.log('user registered succesfully');
-				//SEND TO DISCOVER ROUTE
 			})
 			.catch(error => {
 				setError(error.code);
 				console.log('error while auth');
 			});
-		// }
 	};
 
 	const logout = () => {
@@ -69,6 +68,13 @@ const App = () => {
 		setUser('');
 		//FALTA REDIRIGIR AL INICIO
 	};
+
+	useEffect(() => {
+		const email = localStorage.getItem('email');
+		if (email) setUser(email);
+		else setUser('');
+	}, []);
+
 	return user ? (
 		<BrowserRouter>
 			<Authenticated user={user} logout={logout} />

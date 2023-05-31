@@ -1,4 +1,12 @@
-import { collection, getDocs, query, where, addDoc } from 'firebase/firestore';
+import {
+	collection,
+	getDocs,
+	query,
+	where,
+	addDoc,
+	deleteDoc,
+	doc,
+} from 'firebase/firestore';
 import { db } from '../config';
 
 const colRef = collection(db, 'books');
@@ -27,9 +35,17 @@ const getDocByEmail = async (email: string): Promise<{}[]> => {
 
 //ADD DOC
 const addBook = async (bookData: any) => {
-	const { email, title, authors, imageLinks, publishedDate, textSnippet } =
-		bookData;
+	const {
+		bookId,
+		email,
+		title,
+		authors,
+		imageLinks,
+		publishedDate,
+		textSnippet,
+	} = bookData;
 	const data = {
+		bookId,
 		email,
 		title,
 		authors,
@@ -37,8 +53,28 @@ const addBook = async (bookData: any) => {
 		publishedDate,
 		textSnippet,
 	};
-	const docRef = await addDoc(collection(db, 'books'), data);
+	const docRef = await addDoc(collection(db, 'books'), bookData);
 	console.log(docRef, 'Book add to wishlist!');
 };
 
-export { getDocByEmail, addBook };
+const deleteBook = async (email: string, id: string) => {
+	const querySnapshot = await getDocs(
+		query(
+			collection(db, 'books'),
+			where('email', '==', email),
+			where('bookId', '==', id)
+		)
+	);
+	const results = querySnapshot.docs.map(doc => ({
+		...doc.data(),
+		id: doc.id,
+	}));
+	console.log('THIS SHOUKD BE ONE BOOK: ', results);
+	results.forEach(async result => {
+		const docRef = doc(db, 'books', result.id);
+		await deleteDoc(docRef);
+		console.log('BOOK DELETED!!!!');
+	});
+};
+
+export { getDocByEmail, addBook, deleteBook };

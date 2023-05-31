@@ -3,26 +3,32 @@ import { Book } from 'types';
 import AddIcon from '@mui/icons-material/Add';
 import he from 'he';
 import { AddButtonStyled } from 'styles';
-import { addBook } from 'utils/api_books';
+import { addBook, deleteBook } from 'utils/api_books';
+import CheckIcon from '@mui/icons-material/Check';
+import { useState } from 'react';
 
 const BookRow = ({ user, book }: any) => {
 	const { title, authors, imageLinks, publishedDate } = book.volumeInfo;
 	const id = `book-row-book-${book.id}`;
+	const [isBtonActive, setIsBtonActive] = useState(false);
 
 	const addToWishlist = async () => {
 		const bookData = {
 			email: user,
-			title: book.volumeInfo.title ? book.volumeInfo.title : 'NA',
-			authors: book.volumeInfo.authors ? book.volumeInfo.authors : 'NA',
-			imageLinks: book.volumeInfo.imageLinks.thumbnail
-				? book.volumeInfo.imageLinks.thumbnail
-				: 'NA',
-			publishedDate: book.volumeInfo.publishedDate
-				? book.volumeInfo.publishedDate
-				: 'NA',
+			bookId: book.id,
+			title: title ? title : 'NA',
+			authors: authors ? authors : 'NA',
+			imageLinks: imageLinks.thumbnail ? imageLinks.thumbnail : 'NA',
+			publishedDate: publishedDate ? publishedDate : 'NA',
 			textSnippet: book.searchInfo ? book.searchInfo.textSnippet : 'NA',
 		};
 		await addBook(bookData);
+		setIsBtonActive(true);
+	};
+
+	const deleteFromWishlist = async () => {
+		await deleteBook(user, id);
+		setIsBtonActive(false);
 	};
 
 	return (
@@ -58,20 +64,30 @@ const BookRow = ({ user, book }: any) => {
 							)}
 						</small>
 						<div className="flex row mt-5 justify-end ">
-							<AddButtonStyled onClick={addToWishlist}>
-								<p className="wx-100 mr-2">Add to read list</p>
-								<AddIcon
-									sx={{
-										borderRadius: '150px',
-										'&:hover': {
-											backgroundColor: 'rgb(84, 141, 215)',
-											color: 'white',
-											transition: 'ease-in-out',
-											boxShadow: 'rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;',
-										},
-									}}
-								/>
-							</AddButtonStyled>
+							{isBtonActive ? (
+								<AddButtonStyled
+									sx={{ color: 'green' }}
+									onClick={deleteFromWishlist}
+								>
+									Book added
+									<CheckIcon sx={{ color: 'green' }} />
+								</AddButtonStyled>
+							) : (
+								<AddButtonStyled onClick={addToWishlist}>
+									<p className="wx-100 mr-2">Add to read list</p>
+									<AddIcon
+										sx={{
+											borderRadius: '150px',
+											'&:hover': {
+												backgroundColor: 'rgb(84, 141, 215)',
+												color: 'white',
+												transition: 'ease-in-out',
+												boxShadow: 'rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;',
+											},
+										}}
+									/>
+								</AddButtonStyled>
+							)}
 						</div>
 					</div>
 				</div>

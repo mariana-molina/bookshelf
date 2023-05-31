@@ -40,7 +40,7 @@ const DiscoverBooksScreen = ({ user }: any) => {
 	};
 
 	return (
-		<div className={'max-w-screen-md m-auto w-90vw py-20 px-5'}>
+		<div className={'max-w-screen-md m-auto w-90vw px-5'}>
 			<form className="flex row  items-center" onSubmit={handleSearchSubmit}>
 				<TextField
 					placeholder="Search books..."
@@ -96,7 +96,7 @@ const DiscoverBooksScreen = ({ user }: any) => {
 						))}
 					</ul>
 				) : (
-					<p>No books found. Try another search.</p>
+					<p className="mt-5">No books found. Try another search.</p>
 				)
 			) : null}
 		</div>

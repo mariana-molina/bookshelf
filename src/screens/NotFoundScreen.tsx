@@ -1,26 +1,14 @@
 import { Link } from 'react-router-dom';
-
-// LINK STYLE:
-// const Link = styled(RouterLink)({
-//   color: colors.indigo,
-//   ':hover': {
-//     color: colors.indigoDarken10,
-//     textDecoration: 'underline',
-//   },
-// })
+import { linkStyle2 } from 'styles';
 
 const NotFoundScreen = () => {
 	return (
-		<div
-		// css={{
-		//   height: '100%',
-		//   display: 'grid',
-		//   alignItems: 'center',
-		//   justifyContent: 'center',
-		// }}
-		>
+		<div className="h-full grid align-center justify-center">
 			<div>
-				Sorry... nothing here. <Link to="/discover">Go home</Link>
+				Sorry... nothing here.{' '}
+				<Link style={linkStyle2} to="/discover">
+					Go home
+				</Link>
 			</div>
 		</div>
 	);

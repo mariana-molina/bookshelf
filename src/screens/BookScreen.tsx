@@ -1,8 +1,9 @@
 import * as React from 'react';
 import bookPlaceholderSvg from 'assets/book-placeholder.svg';
-import { getDocByEmail } from 'utils/api_books';
+import { deleteBook, getDocByEmail } from 'utils/api_books';
 import { useState } from 'react';
 import { useAsync } from 'utils/hooks';
+import { Button } from '@mui/material';
 
 const loadingBook = {
 	title: 'Loading...',
@@ -14,26 +15,25 @@ const loadingBook = {
 };
 
 const BookScreen = ({ user }: any) => {
-	// const [data, setData] = useState<{}[]>([]);
 	const { data, run } = useAsync('');
+
+	const handleDelete = async () => {
+		await deleteBook(user);
+	};
 
 	React.useEffect(() => {
 		const getAllBooks = async () => {
-			// const books = await getDocByEmail(user);
 			run(getDocByEmail(user));
-			// setData(books);
 		};
 		getAllBooks();
 	}, [user, run]);
-
-	console.log(data);
 
 	return (
 		data &&
 		data.map((book: any) => {
 			return (
 				<div>
-					<div className="flex flex-col gap-y-2 lg:grid lg:grid-cols-2 lg:gap-14">
+					<div className="flex flex-col gap-y-2 lg:mb-50 lg:grid lg:grid-cols-2 lg:gap-14">
 						<img
 							className="w-full max-w-xs"
 							alt={book.title + 'book cover'}
@@ -53,6 +53,7 @@ const BookScreen = ({ user }: any) => {
 							<br />
 							<p>{book.textSnippet}</p>
 						</div>
+						<Button onClick={handleDelete}>Delete</Button>
 					</div>
 				</div>
 			);

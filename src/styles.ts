@@ -1,6 +1,5 @@
 import { Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { Link } from 'react-router-dom';
 
 const buttonStyle = {
 	margin: '10px',
@@ -24,14 +23,22 @@ const linkStyle = {
 	margin: '5px 0',
 	width: '100%',
 	height: '100%',
-	color: 'black',
+	color: 'text',
 	borderRadius: '2px',
 	borderLeft: '5px solid transparent',
 	':hover': {
 		color: 'indigo',
 		textDecoration: 'none',
-		background: 'gray',
+		background: 'gray10',
 	},
 };
 
-export { linkStyle, AddButtonStyled, buttonStyle };
+const linkStyle2 = {
+	color: 'indigo',
+	':hover': {
+		color: 'indigoDarken10',
+		textDecoration: 'underline',
+	},
+};
+
+export { linkStyle, AddButtonStyled, buttonStyle, linkStyle2 };
