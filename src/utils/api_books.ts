@@ -7,8 +7,21 @@ import {
 	deleteDoc,
 	doc,
 	updateDoc,
+	arrayUnion,
 } from 'firebase/firestore';
 import { db } from '../config';
+interface BookDataProps {
+	bookId: string;
+	email: string[];
+	title: string;
+	authors: string[];
+	imageLinks: string;
+	publishedDate: string;
+	textSnippet: string;
+}
+interface ExtendedBookDataProps extends BookDataProps {
+	docId: string;
+}
 
 const colRef = collection(db, 'books');
 
@@ -32,46 +45,44 @@ const getDocByEmail = async (email: string): Promise<BookDataProps[]> => {
 	querySnapshot.forEach((doc: any) => {
 		if (doc.data()) data.push(doc.data());
 	});
-	console.log('THIS SHOULD BE AN ARRAY OF 2:', data);
 	return data;
 };
-const getDocById = async (id: string): Promise<BookDataProps[]> => {
+
+const getDocById = async (id: string): Promise<ExtendedBookDataProps[]> => {
 	const querySnapshot = await getDocs(query(colRef, where('bookId', '==', id)));
-	const data: BookDataProps[] = [];
+	const data: ExtendedBookDataProps[] = [];
 	querySnapshot.forEach((doc: any) => {
-		if (doc.data()) data.push(doc.data());
+		if (doc.data()) {
+			const info = doc.data();
+			const bookInfo: BookDataProps = info;
+			const docId: any = { docId: doc.id };
+			const fullBook = { ...bookInfo, ...docId };
+			data.push(fullBook);
+		}
 	});
 	return data;
 };
 
 //ADD DOC
-type BookDataProps = {
-	bookId: string;
-	email: string[];
-	title: string;
-	authors: string[];
-	imageLinks: string;
-	publishedDate: string;
-	textSnippet: string;
-};
-
 const addBook = async (bookData: BookDataProps, userEmail: string) => {
-	const { bookId } = bookData;
-	const book = await getDocById(bookId);
-	console.log('HERE SHOULD BE A BOOK:', book);
-	if (book) {
-		// 	//check if user is in user[]
-		console.log('HERE EMAIL IN LIST:', book[0].email);
-		const filteredUser = book[0].email.find(user => user === userEmail);
-		if (!filteredUser) {
-			// 		//ADD USER TO EMAIL LIST
-			const docRef = doc(db, 'books', 'DBrGLz2mML2vN7JBAxic');
-			await updateDoc(docRef, { email: userEmail });
-			console.log('USER ADDED SUCCESFULLY TO EMAIL LIST!');
+	try {
+		const { bookId } = bookData;
+		const book = await getDocById(bookId);
+		console.log(book.length);
+		if (book.length > 0) {
+			const { email, docId } = book[0];
+			const filteredUser = email.find((user: string) => user === userEmail);
+			if (!filteredUser) {
+				const docRef = doc(db, 'books', docId);
+				await updateDoc(docRef, { email: arrayUnion(userEmail) });
+				console.log('USER ADDED SUCCESSFULLY TO EMAIL LIST!');
+			}
+		} else {
+			const docRef = await addDoc(colRef, bookData);
+			console.log(docRef, 'Book added to wishlist!');
 		}
-	} else {
-		const docRef = await addDoc(colRef, bookData);
-		console.log(docRef, 'Book add to wishlist!');
+	} catch (e) {
+		console.log('There was an error:', e);
 	}
 };
 

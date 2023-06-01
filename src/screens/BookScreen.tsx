@@ -1,7 +1,6 @@
 import * as React from 'react';
 import bookPlaceholderSvg from 'assets/book-placeholder.svg';
 import { deleteBook, getDocByEmail } from 'utils/api_books';
-import { useState } from 'react';
 import { useAsync } from 'utils/hooks';
 import { Button } from '@mui/material';
 
