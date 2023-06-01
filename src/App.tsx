@@ -35,18 +35,6 @@ const App = () => {
 				console.log(errorCode);
 				console.log(errorMessage);
 			});
-
-		// signInWithEmailAndPassword(auth, email, password)
-		// 	.then((data: any) => {
-		// 		console.log('USER LOGIN SUCCESSFULLY:', data.user);
-		// 		setUser(data.user.email);
-		// 		//SEND TO DISCOVER ROUTE
-		// 	})
-		// 	.catch(error => {
-		// 		setError(error.code);
-		// 		console.log(error);
-		// 		console.log('error while signing in');
-		// 	});
 	};
 
 	const register = (formData: UserObj) => {
@@ -66,7 +54,6 @@ const App = () => {
 	const logout = () => {
 		localStorage.removeItem('email');
 		setUser('');
-		//FALTA REDIRIGIR AL INICIO
 	};
 
 	useEffect(() => {

@@ -14,7 +14,7 @@ const BookRow = ({ user, book }: any) => {
 
 	const addToWishlist = async () => {
 		const bookData = {
-			email: user,
+			email: [user],
 			bookId: book.id,
 			title: title ? title : 'NA',
 			authors: authors ? authors : 'NA',
@@ -22,7 +22,7 @@ const BookRow = ({ user, book }: any) => {
 			publishedDate: publishedDate ? publishedDate : 'NA',
 			textSnippet: book.searchInfo ? book.searchInfo.textSnippet : 'NA',
 		};
-		await addBook(bookData);
+		await addBook(bookData, user);
 		setIsBtonActive(true);
 	};
 

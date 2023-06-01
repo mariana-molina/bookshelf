@@ -11,10 +11,20 @@ type AuthenthicatedProps = {
 };
 
 export const Authenticated = ({ user, logout }: AuthenthicatedProps) => {
+	const extractUserEmail = (email: string) => {
+		const regex = /^([^@]+)/g;
+		const matches = email.match(regex);
+		if (matches) {
+			return matches[0];
+		}
+		return null;
+	};
 	return (
 		<div>
 			<div className="flex row justify-end">
-				<p>{user.displayName === undefined ? 'Hi there!' : user.displayName}</p>
+				<p>
+					{user === undefined ? 'Hi there!' : `Hi ${extractUserEmail(user)}`}
+				</p>
 				<Button sx={buttonStyle} onClick={logout}>
 					Log out
 				</Button>

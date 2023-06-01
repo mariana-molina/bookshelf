@@ -18,7 +18,7 @@ const BookScreen = ({ user }: any) => {
 	const { data, run } = useAsync('');
 
 	const handleDelete = async () => {
-		await deleteBook(user);
+		await deleteBook(user, 'bookId');
 	};
 
 	React.useEffect(() => {
